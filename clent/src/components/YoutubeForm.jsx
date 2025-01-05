@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFormik } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 const initialValues = {
@@ -44,54 +44,63 @@ const validationSchema = Yup.object({
 
 function YoutubeForm() {
 
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    // validate,
-    validationSchema
-  })
-
   // console.log('Form Values', formik.values)
   // console.log('Form Data', formik.errors)
-  console.log('Visted fields', formik.touched)
+  // console.log('Visted fields', formik.touched)
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      <Form>
         <div className='form-control'>
           <label htmlFor='name'>Name</label>
-          <input
+          <Field
             type='text'
             id='name'
             name='name'
-            {...formik.getFieldProps('name')}
           />
-          {formik.touched.name && formik.errors.name ? <div className='error'>{formik.errors.name}</div> : null}
+          <ErrorMessage name='name' />
         </div>
         <div className='form-control'>
           <label htmlFor='email'>Email</label>
-          <input
+          <Field
             type='email'
-            id='email'
+            id='email' Field
             name='email'
-            {...formik.getFieldProps('email')}
           />
-          {formik.touched.email && formik.errors.email ? <div className='error'>{formik.errors.email}</div> : null}
+          <ErrorMessage name='email' />
         </div>
         <div className='form-control'>
           <label htmlFor='channel'>Channel</label>
-          <input
+          <Field
             type='text'
             d='channel'
             name='channel'
-            {...formik.getFieldProps('channel')}
           />
-          {formik.touched.channel && formik.errors.channel ? <div className='error'>{formik.errors.channel}</div> : null}
+          <ErrorMessage name='channel' />
         </div>
         <button style={{ marginTop: '10px' }}>Submit</button>
-      </form>
-    </div>
+      </Form>
+    </Formik>
   )
 }
 
 export default YoutubeForm
+
+
+
+
+
+// simple form with three fields
+// useFormik hhoks
+// managing from state, handling form submission and form validation
+// initalvalues object + formik.handleChange
+// onSubmit method + formik.handleSubmit
+// validate function
+// validationSchema object
+// formik.errors and formik.touched
+// formik components - Formik, Form, Field and ErroeMessage
+
