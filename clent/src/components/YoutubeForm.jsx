@@ -1,11 +1,18 @@
 import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import TextError from './TextError'
 
 const initialValues = {
-  name: 'Surya',
+  name: '',
   email: '',
-  channel: ''
+  channel: '',
+  comments: '',
+  address: '',
+  social: {
+    facebook: '',
+    twitter: ''
+  }
 }
 
 const onSubmit = values => {
@@ -62,7 +69,7 @@ function YoutubeForm() {
             id='name'
             name='name'
           />
-          <ErrorMessage name='name' />
+          <ErrorMessage name='name' component={TextError}/>
         </div>
         <div className='form-control'>
           <label htmlFor='email'>Email</label>
@@ -71,7 +78,11 @@ function YoutubeForm() {
             id='email' Field
             name='email'
           />
-          <ErrorMessage name='email' />
+          <ErrorMessage name='email'>
+            {
+              errorMsg => <div className='error'>{errorMsg}</div>
+            }
+          </ErrorMessage>
         </div>
         <div className='form-control'>
           <label htmlFor='channel'>Channel</label>
@@ -79,8 +90,38 @@ function YoutubeForm() {
             type='text'
             d='channel'
             name='channel'
+            placeholder='Channel Name'
           />
           <ErrorMessage name='channel' />
+        </div>
+        <div className='form-control'>
+          <label htmlFor="comments">Comments</label>
+          <Field as='textarea' id='comments' name='comments'/>
+        </div>
+        <div className='form-control'>
+          <label htmlFor='address'>Address</label>
+          <Field name='address'>
+            {
+              (add) => {
+                const {field, form, meta} = add
+                console.log('Render props', add)
+                return (
+                  <div>
+                    <input type='text' id='address' {...field} />
+                    {meta.touched && meta.error ? <div>{meta.error}</div> : null}
+                  </div>
+                )
+              }
+            }
+          </Field>
+        </div>
+        <div className='form-control'>
+            <label htmlFor="facebook">Facebook Profile</label>
+            <Field type="text" id="facebook" name="social.facebbok" />
+        </div>
+        <div className='form-control'>
+          <label htmlFor="twitter">Twitter Profile</label>
+          <Field type="text" id="twitter" name="social.twitter" />
         </div>
         <button style={{ marginTop: '10px' }}>Submit</button>
       </Form>
