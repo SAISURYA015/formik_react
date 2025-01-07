@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import TextError from './TextError'
 
@@ -11,8 +11,10 @@ const initialValues = {
   address: '',
   social: {
     facebook: '',
-    twitter: ''
-  }
+    twitter: '',
+  },
+  phoneNumbers : ['', ''],
+  phNumbers: ['']
 }
 
 const onSubmit = values => {
@@ -122,6 +124,41 @@ function YoutubeForm() {
         <div className='form-control'>
           <label htmlFor="twitter">Twitter Profile</label>
           <Field type="text" id="twitter" name="social.twitter" />
+        </div>
+        <div className='form-control'>
+          <label htmlFor="primaryPh">Primary Phone Number</label>
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
+        </div>
+        <div className='form-control'>
+          <label htmlFor="secondryPh">Secondry Phone Number</label>
+          <Field type="text" id="secondryPh" name="phoneNumbers[1]" />
+        </div>
+        <div className='form-control'>
+            <label htmlFor="List of Phonbe Numbers"></label>
+            <FieldArray name='phNumbers'>
+              {
+                (fieldArrayProps) => {
+                  console.log('fieldArrayProps', fieldArrayProps)
+                  const { push, remove, form } = fieldArrayProps
+                  const { values } = form
+                  const { phNumbers } = values
+                  return (
+                    <>
+                      {phNumbers.map((phNumbers, index) => (
+                        <div key={index}>
+                          <Field name={`phNumbers[${index}]`}/>
+                          {
+                            index > 0 && <button type='button' onClick={() => remove(index)}>{' '}- {' '}</button>
+                          }
+                          
+                          <button type='button' onClick={() => push('')}>{' '}+{' '}</button>
+                        </div>
+                      ))}
+                    </>
+                  )
+                }
+              }
+            </FieldArray>
         </div>
         <button style={{ marginTop: '10px' }}>Submit</button>
       </Form>
