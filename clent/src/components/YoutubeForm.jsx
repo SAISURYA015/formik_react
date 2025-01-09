@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Formik,
   Form,
@@ -24,10 +24,25 @@ const initialValues = {
   phNumbers: ['']
 }
 
+const savedValues = {
+  name: '',
+  email: '',
+  channel: '',
+  comments: '',
+  address: '',
+  social: {
+    facebook: '',
+    twitter: '',
+  },
+  phoneNumbers: ['', ''],
+  phNumbers: ['']
+}
+
 const onSubmit = (values, onSubmitProps) => {
   console.log('Form data', values)
-  console.log('submit props', onSubmitProps)
+  console.log('Submit props', onSubmitProps)
   onSubmitProps.setSubmitting(false)
+  onSubmitProps.resetForm()
 }
 
 const validate = values => {
@@ -64,28 +79,30 @@ const validationSchema = Yup.object({
 const validateComments = value => {
   let error
   if (!value) {
-    error = 'Required'
+    error = "Required"
   }
   return error
 }
 
 function YoutubeForm() {
-
+  const [formValues, setFormValues] = useState(null);
   // console.log('Form Values', formik.values)
   // console.log('Form Data', formik.errors)
   // console.log('Visted fields', formik.touched)
 
   return (
     <Formik
-      initialValues={initialValues}
+      // initialValues={initialValues}
+      initialValues={formValues || initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
-    // validateOnChange={false}
-    // validateOnBlur={false}
+      enableReinitialize
+    // validateOnMount
     >
       {
         formik => {
-          console.log('Formik Props', formik)
+          console.log('Formik Props', formik);
+
           return (
             <Form>
               <div className='form-control'>
@@ -97,6 +114,7 @@ function YoutubeForm() {
                 />
                 <ErrorMessage name='name' component={TextError} />
               </div>
+              {/* email */}
               <div className='form-control'>
                 <label htmlFor='email'>Email</label>
                 <Field
@@ -110,6 +128,7 @@ function YoutubeForm() {
                   }
                 </ErrorMessage>
               </div>
+              {/* channel */}
               <div className='form-control'>
                 <label htmlFor='channel'>Channel</label>
                 <Field
@@ -120,6 +139,7 @@ function YoutubeForm() {
                 />
                 <ErrorMessage name='channel' />
               </div>
+              {/* comments */}
               <div className='form-control'>
                 <label htmlFor="comments">Comments</label>
                 <Field as='textarea' id='comments' name='comments' validate={validateComments} />
@@ -142,14 +162,17 @@ function YoutubeForm() {
                   }
                 </FastField>
               </div>
+              {/* facebook */}
               <div className='form-control'>
                 <label htmlFor="facebook">Facebook Profile</label>
                 <Field type="text" id="facebook" name="social.facebbok" />
               </div>
+              {/* twitter */}
               <div className='form-control'>
                 <label htmlFor="twitter">Twitter Profile</label>
                 <Field type="text" id="twitter" name="social.twitter" />
               </div>
+              {/* phonenumber */}
               <div className='form-control'>
                 <label htmlFor="primaryPh">Primary Phone Number</label>
                 <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
@@ -158,8 +181,9 @@ function YoutubeForm() {
                 <label htmlFor="secondryPh">Secondry Phone Number</label>
                 <Field type="text" id="secondryPh" name="phoneNumbers[1]" />
               </div>
+              {/* list of pnone numbers */}
               <div className='form-control'>
-                <label htmlFor="List of Phonbe Numbers"></label>
+                <label htmlFor="List of Phone Numbers"></label>
                 <FieldArray name='phNumbers'>
                   {
                     (fieldArrayProps) => {
@@ -186,19 +210,21 @@ function YoutubeForm() {
                   }
                 </FieldArray>
               </div>
-              <button type='button' onClick={() => formik.validateField('comments')}>Validate comments</button>
-              <button type='button' onClick={() => formik.validateField()}>Validate all</button>
+              {/* <button type='button' onClick={() => formik.validateField('comments')}>Validate comments</button>
+              <button type='button' onClick={() => formik.validateForm()}>Validate all</button>
               <button type='button' onClick={() => formik.setFieldTouched('comments')}>Visit comments</button>
               <button type='button' onClick={() => formik.setTouched({
                 name: true,
                 email: true,
                 channel: true,
                 comments: true
-              })}>Visit Fields</button>
-              <button type='submit' style={{ marginTop: '10px' }} disabled={!formik.isValid || !formik.isSubmitting}>Submit</button>
+              })}>Visit Fields</button> */}
+              <button type='button' onClick={() => setFormValues(savedValues)}>Load Saved Data</button>
+              <button type='reset'>Reset</button>
+              <button style={{ marginTop: '10px' }} disabled={!formik.isValid || formik.isSubmitting}>Submit</button>
             </Form>
           )
-        } 
+        }
       }
 
     </Formik>
